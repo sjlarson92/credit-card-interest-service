@@ -2,14 +2,14 @@ package com.sasha.creditcardinterestservice.models;
 
 public class CreditCard {
     int id;
-    CreditCardType type;
+    Type type;
     int balance;
 
     public CreditCard() {}
 
     public CreditCard(
             int id,
-            CreditCardType type,
+            Type type,
             int balance
     ) {
         this.id = id;
@@ -21,7 +21,7 @@ public class CreditCard {
         return id;
     }
 
-    public CreditCardType getType() {
+    public Type getType() {
         return type;
     }
 
@@ -29,7 +29,7 @@ public class CreditCard {
         return balance;
     }
 
-    private enum CreditCardType {
+    public enum Type {
         VISA, MASTERCARD, DISCOVER
     }
 }

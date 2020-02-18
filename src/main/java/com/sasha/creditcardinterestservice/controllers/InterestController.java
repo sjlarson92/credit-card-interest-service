@@ -1,5 +1,6 @@
 package com.sasha.creditcardinterestservice.controllers;
 
+import com.sasha.creditcardinterestservice.models.CreditCard;
 import com.sasha.creditcardinterestservice.models.Customer;
 import com.sasha.creditcardinterestservice.models.CustomerInterest;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 @RestController
@@ -15,11 +18,41 @@ public class InterestController {
 
     @GetMapping("/byPerson")
     public ArrayList<CustomerInterest> getTotalInterestByPerson(@RequestBody ArrayList<Customer> customers) {
-        customers.forEach(customer -> System.out.println("customer is: " + customer.getFirstName()));
         ArrayList<CustomerInterest> customerInterestArray = new ArrayList<>();
+        customers.forEach(customer -> {
 
-        CustomerInterest customerInterest = new CustomerInterest(1, "Lucas", "Costa", 100);
-        customerInterestArray.add(customerInterest);
+            BigDecimal totalInterest = BigDecimal.valueOf(0);
+            ArrayList<CreditCard> creditCards = customer.getWallets().get(0).getCreditCards();
+
+            for(CreditCard creditCard : creditCards) {
+                int creditCardBalance = creditCard.getBalance();
+                CreditCard.Type creditCardType = creditCard.getType();
+
+                BigDecimal creditCardInterest = BigDecimal.valueOf(0);
+                switch (creditCardType) {
+                    case VISA:
+                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .1).setScale(2, RoundingMode.HALF_UP);
+                        break;
+                    case DISCOVER:
+                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .01).setScale(2, RoundingMode.HALF_UP);
+                        break;
+                    case MASTERCARD:
+                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
+                        break;
+                }
+                totalInterest =  totalInterest.add(creditCardInterest);
+            }
+
+            CustomerInterest customerInterest = new CustomerInterest(
+                    customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    totalInterest
+            );
+            customerInterestArray.add(customerInterest);
+        });
+
+
         return customerInterestArray;
     }
 

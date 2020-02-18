@@ -1,14 +1,16 @@
 package com.sasha.creditcardinterestservice.models;
 
+import java.math.BigDecimal;
+
 public class CustomerInterest {
     int id;
     String firstName;
     String lastName;
-    int totalInterest;
+    BigDecimal totalInterest;
 
     public CustomerInterest() {}
 
-    public CustomerInterest(int id, String firstName, String lastName, int totalInterest) {
+    public CustomerInterest(int id, String firstName, String lastName, BigDecimal totalInterest) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,7 +29,7 @@ public class CustomerInterest {
         return lastName;
     }
 
-    public int getTotalInterest() {
+    public BigDecimal getTotalInterest() {
         return totalInterest;
     }
 }

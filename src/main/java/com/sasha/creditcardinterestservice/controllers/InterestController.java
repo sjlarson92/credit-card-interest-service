@@ -2,32 +2,33 @@ package com.sasha.creditcardinterestservice.controllers;
 
 import com.sasha.creditcardinterestservice.models.CreditCard;
 import com.sasha.creditcardinterestservice.models.Customer;
-import com.sasha.creditcardinterestservice.models.CustomerInterest;
+import com.sasha.creditcardinterestservice.models.CustomerAndCreditCardInterest;
 import com.sasha.creditcardinterestservice.models.Wallet;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/interest")
 public class InterestController {
 
-    @GetMapping("/byPerson")
-    public ArrayList<CustomerInterest> getTotalInterestByPerson(@RequestBody ArrayList<Customer> customers) {
-        ArrayList<CustomerInterest> customerInterestArray = new ArrayList<>();
+    @GetMapping("/customerAndCreditCard")
+    public ArrayList<CustomerAndCreditCardInterest> getTotalInterestByCustomer(@RequestBody ArrayList<Customer> customers) {
+        ArrayList<CustomerAndCreditCardInterest> customerAndCreditCardInterestArray = new ArrayList<>();
         customers.forEach(customer -> {
 
             BigDecimal totalInterest = BigDecimal.valueOf(0);
+            Map<Integer, BigDecimal> interestByCreditCard = new HashMap<>();
             ArrayList<Wallet> wallets = customer.getWallets();
 
             for(Wallet wallet: wallets) {
                 ArrayList<CreditCard> creditCards = wallet.getCreditCards();
                 for(CreditCard creditCard : creditCards) {
+
                     int creditCardBalance = creditCard.getBalance();
                     CreditCard.Type creditCardType = creditCard.getType();
 
@@ -43,21 +44,28 @@ public class InterestController {
                             creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
                             break;
                     }
+                    interestByCreditCard.put(creditCard.getId(), creditCardInterest);
                     totalInterest =  totalInterest.add(creditCardInterest);
                 }
             }
 
-            CustomerInterest customerInterest = new CustomerInterest(
+            CustomerAndCreditCardInterest customerAndCreditCardInterest = new CustomerAndCreditCardInterest(
                     customer.getId(),
                     customer.getFirstName(),
                     customer.getLastName(),
-                    totalInterest
+                    totalInterest,
+                    interestByCreditCard
             );
-            customerInterestArray.add(customerInterest);
+            customerAndCreditCardInterestArray.add(customerAndCreditCardInterest);
         });
 
 
-        return customerInterestArray;
+        return customerAndCreditCardInterestArray;
+    }
+
+    @GetMapping("/customerAndWallet")
+    public void getInterestByCustomerAndCC() {
+
     }
 
 }

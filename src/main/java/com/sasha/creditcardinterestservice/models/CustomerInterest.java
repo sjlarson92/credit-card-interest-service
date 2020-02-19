@@ -3,30 +3,30 @@ package com.sasha.creditcardinterestservice.models;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public class CustomerAndWalletInterest {
-    int id;
+public class CustomerInterest {
+    int customerId;
     String firstName;
     String lastName;
     BigDecimal totalInterest;
-    Map<Integer, BigDecimal> interestByWallet;
+    Map<String, Map<Integer, BigDecimal>> interestByType;
 
-    public CustomerAndWalletInterest() {}
+    public CustomerInterest() {}
 
-    public CustomerAndWalletInterest(
-            int id,
+    public CustomerInterest(
+            int customerId,
             String firstName,
             String lastName,
             BigDecimal totalInterest,
-            Map<Integer, BigDecimal> interestByWallet) {
-        this.id = id;
+            Map<String, Map<Integer, BigDecimal>> interestByType) {
+        this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.totalInterest = totalInterest;
-        this.interestByWallet = interestByWallet;
+        this.interestByType = interestByType;
     }
 
-    public int getId() {
-        return id;
+    public int getCustomerId() {
+        return customerId;
     }
 
     public String getFirstName() {
@@ -41,9 +41,7 @@ public class CustomerAndWalletInterest {
         return totalInterest;
     }
 
-    public Map<Integer, BigDecimal> getInterestByWallet() {
-        return interestByWallet;
+    public Map<String, Map<Integer, BigDecimal>> getInterestByType() {
+        return interestByType;
     }
-
-
 }

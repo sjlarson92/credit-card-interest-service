@@ -1,7 +1,6 @@
 package com.sasha.creditcardinterestservice.services;
 
 import com.sasha.creditcardinterestservice.models.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,49 +10,51 @@ import java.util.Map;
 
 public class InterestService {
 
-    public ArrayList<CustomerAndCreditCardInterest> getCustomerAndCreditCardInterest(ArrayList<Customer> customers) {
-        ArrayList<CustomerAndCreditCardInterest> customerAndCreditCardInterestArray = new ArrayList<>();
+    public ArrayList<CustomerInterest> getCustomerAndCreditCardInterest(ArrayList<Customer> customers) {
+        ArrayList<CustomerInterest> customerInterestArray = new ArrayList<>();
         customers.forEach(customer -> {
 
             BigDecimal totalInterest = getCustomerTotalInterest(customer);
             Map<Integer, BigDecimal> interestByCreditCard = getInterestByCreditCardId(customer);
-
-            CustomerAndCreditCardInterest customerAndCreditCardInterest = new CustomerAndCreditCardInterest(
+            Map<String, Map<Integer, BigDecimal>> interestByType = new HashMap<>();
+            interestByType.put("creditCard", interestByCreditCard);
+            CustomerInterest customerInterest = new CustomerInterest(
                     customer.getId(),
                     customer.getFirstName(),
                     customer.getLastName(),
                     totalInterest,
-                    interestByCreditCard
+                    interestByType
             );
-            customerAndCreditCardInterestArray.add(customerAndCreditCardInterest);
+            customerInterestArray.add(customerInterest);
         });
 
 
-        return customerAndCreditCardInterestArray;
+        return customerInterestArray;
     }
 
-    public ArrayList<CustomerAndWalletInterest> getCustomerAndWalletInterest(ArrayList<Customer> customers) {
-        ArrayList<CustomerAndWalletInterest> customerAndWalletInterestArray = new ArrayList<>();
+    public ArrayList<CustomerInterest> getCustomerAndWalletInterest(ArrayList<Customer> customers) {
+        ArrayList<CustomerInterest> customerAndWalletInterestArray = new ArrayList<>();
         customers.forEach(customer -> {
 
             BigDecimal totalInterest = getCustomerTotalInterest(customer);
             Map<Integer, BigDecimal> interestByWallet = getInterestByWalletId(customer);
-
-            CustomerAndWalletInterest customerAndWalletInterest = new CustomerAndWalletInterest(
+            Map<String, Map<Integer, BigDecimal>> interestByType = new HashMap<>();
+            interestByType.put("wallet", interestByWallet);
+            CustomerInterest customerInterest = new CustomerInterest(
                     customer.getId(),
                     customer.getFirstName(),
                     customer.getLastName(),
                     totalInterest,
-                    interestByWallet
+                    interestByType
             );
-            customerAndWalletInterestArray.add(customerAndWalletInterest);
+            customerAndWalletInterestArray.add(customerInterest);
         });
 
 
         return customerAndWalletInterestArray;
     }
 
-    public BigDecimal getCustomerTotalInterest(Customer customer) {
+    private BigDecimal getCustomerTotalInterest(Customer customer) {
         BigDecimal totalInterest = BigDecimal.ZERO;
         ArrayList<Wallet> wallets = customer.getWallets();
 
@@ -82,7 +83,7 @@ public class InterestService {
         return totalInterest;
     }
 
-    public Map<Integer, BigDecimal> getInterestByWalletId(Customer customer) {
+    private Map<Integer, BigDecimal> getInterestByWalletId(Customer customer) {
         Map<Integer, BigDecimal> interestByWallet = new HashMap<>();
 
         ArrayList<Wallet> wallets = customer.getWallets();
@@ -114,7 +115,7 @@ public class InterestService {
         return interestByWallet;
     }
 
-    public Map<Integer, BigDecimal> getInterestByCreditCardId(Customer customer) {
+    private Map<Integer, BigDecimal> getInterestByCreditCardId(Customer customer) {
         ArrayList<Wallet> wallets = customer.getWallets();
         Map<Integer, BigDecimal> interestByCreditCard = new HashMap<>();
         for(Wallet wallet: wallets) {

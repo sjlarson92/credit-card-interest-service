@@ -100,7 +100,8 @@ public class InterestService {
         return interestByCreditCard;
     }
 
-    private BigDecimal getCreditCardInterest(int creditCardBalance, CreditCard.Type creditCardType) {
+    public BigDecimal getCreditCardInterest(int creditCardBalance, CreditCard.Type creditCardType) {
+        System.out.println("getCreditCardInterest by: " + creditCardBalance + " & " + creditCardType);
         BigDecimal creditCardInterest = BigDecimal.valueOf(0);
         switch (creditCardType) {
             case VISA:

@@ -17,47 +17,19 @@ public class InterestController {
     InterestService interestService = new InterestService();
 
     @GetMapping("/customerAndCreditCard")
-    public ArrayList<CustomerAndCreditCardInterest> getInterestByCustomerAndCreditCard(@RequestBody ArrayList<Customer> customers) {
-        ArrayList<CustomerAndCreditCardInterest> customerAndCreditCardInterestArray = new ArrayList<>();
-        customers.forEach(customer -> {
-
-            BigDecimal totalInterest = interestService.getCustomerTotalInterest(customer);
-            Map<Integer, BigDecimal> interestByCreditCard = interestService.getInterestByCreditCardId(customer);
-
-            CustomerAndCreditCardInterest customerAndCreditCardInterest = new CustomerAndCreditCardInterest(
-                    customer.getId(),
-                    customer.getFirstName(),
-                    customer.getLastName(),
-                    totalInterest,
-                    interestByCreditCard
-            );
-            customerAndCreditCardInterestArray.add(customerAndCreditCardInterest);
-        });
-
-
-        return customerAndCreditCardInterestArray;
+    public ArrayList<CustomerAndCreditCardInterest> getCustomerAndCreditCardInterest(@RequestBody ArrayList<Customer> customers) {
+        customers.forEach(customer ->
+                System.out.println("Getting Customer and Credit Card interest for: " + customer.getFirstName())
+        );
+        return interestService.getCustomerAndCreditCardInterest(customers);
     }
 
     @GetMapping("/customerAndWallet")
-    public ArrayList<CustomerAndWalletInterest> getInterestByCustomerAndWallet(@RequestBody ArrayList<Customer> customers) {
-        ArrayList<CustomerAndWalletInterest> customerAndWalletInterestArray = new ArrayList<>();
-        customers.forEach(customer -> {
-
-            BigDecimal totalInterest = interestService.getCustomerTotalInterest(customer);
-            Map<Integer, BigDecimal> interestByWallet = interestService.getInterestByWalletId(customer);
-
-            CustomerAndWalletInterest customerAndWalletInterest = new CustomerAndWalletInterest(
-                    customer.getId(),
-                    customer.getFirstName(),
-                    customer.getLastName(),
-                    totalInterest,
-                    interestByWallet
-            );
-            customerAndWalletInterestArray.add(customerAndWalletInterest);
-        });
-
-
-        return customerAndWalletInterestArray;
+    public ArrayList<CustomerAndWalletInterest> getCustomerAndWalletInterest(@RequestBody ArrayList<Customer> customers) {
+        customers.forEach(customer ->
+                System.out.println("Getting Customer and Wallet interest for: " + customer.getFirstName())
+        );
+        return interestService.getCustomerAndWalletInterest(customers);
     }
 
 }

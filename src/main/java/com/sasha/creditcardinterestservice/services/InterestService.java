@@ -1,6 +1,7 @@
 package com.sasha.creditcardinterestservice.services;
 
 import com.sasha.creditcardinterestservice.models.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,6 +10,48 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InterestService {
+
+    public ArrayList<CustomerAndCreditCardInterest> getCustomerAndCreditCardInterest(ArrayList<Customer> customers) {
+        ArrayList<CustomerAndCreditCardInterest> customerAndCreditCardInterestArray = new ArrayList<>();
+        customers.forEach(customer -> {
+
+            BigDecimal totalInterest = getCustomerTotalInterest(customer);
+            Map<Integer, BigDecimal> interestByCreditCard = getInterestByCreditCardId(customer);
+
+            CustomerAndCreditCardInterest customerAndCreditCardInterest = new CustomerAndCreditCardInterest(
+                    customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    totalInterest,
+                    interestByCreditCard
+            );
+            customerAndCreditCardInterestArray.add(customerAndCreditCardInterest);
+        });
+
+
+        return customerAndCreditCardInterestArray;
+    }
+
+    public ArrayList<CustomerAndWalletInterest> getCustomerAndWalletInterest(ArrayList<Customer> customers) {
+        ArrayList<CustomerAndWalletInterest> customerAndWalletInterestArray = new ArrayList<>();
+        customers.forEach(customer -> {
+
+            BigDecimal totalInterest = getCustomerTotalInterest(customer);
+            Map<Integer, BigDecimal> interestByWallet = getInterestByWalletId(customer);
+
+            CustomerAndWalletInterest customerAndWalletInterest = new CustomerAndWalletInterest(
+                    customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    totalInterest,
+                    interestByWallet
+            );
+            customerAndWalletInterestArray.add(customerAndWalletInterest);
+        });
+
+
+        return customerAndWalletInterestArray;
+    }
 
     public BigDecimal getCustomerTotalInterest(Customer customer) {
         BigDecimal totalInterest = BigDecimal.ZERO;

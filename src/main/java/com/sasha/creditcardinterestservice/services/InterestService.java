@@ -13,7 +13,6 @@ public class InterestService {
     public ArrayList<CustomerInterest> getCustomerAndCreditCardInterest(ArrayList<Customer> customers) {
         ArrayList<CustomerInterest> customerInterestArray = new ArrayList<>();
         customers.forEach(customer -> {
-
             BigDecimal totalInterest = getCustomerTotalInterest(customer);
             Map<Integer, BigDecimal> interestByCreditCard = getInterestByCreditCardId(customer);
             Map<String, Map<Integer, BigDecimal>> interestByType = new HashMap<>();
@@ -28,14 +27,12 @@ public class InterestService {
             customerInterestArray.add(customerInterest);
         });
 
-
         return customerInterestArray;
     }
 
     public ArrayList<CustomerInterest> getCustomerAndWalletInterest(ArrayList<Customer> customers) {
         ArrayList<CustomerInterest> customerAndWalletInterestArray = new ArrayList<>();
         customers.forEach(customer -> {
-
             BigDecimal totalInterest = getCustomerTotalInterest(customer);
             Map<Integer, BigDecimal> interestByWallet = getInterestByWalletId(customer);
             Map<String, Map<Integer, BigDecimal>> interestByType = new HashMap<>();
@@ -50,7 +47,6 @@ public class InterestService {
             customerAndWalletInterestArray.add(customerInterest);
         });
 
-
         return customerAndWalletInterestArray;
     }
 
@@ -61,22 +57,9 @@ public class InterestService {
         for(Wallet wallet: wallets) {
             ArrayList<CreditCard> creditCards = wallet.getCreditCards();
             for(CreditCard creditCard : creditCards) {
-
                 int creditCardBalance = creditCard.getBalance();
                 CreditCard.Type creditCardType = creditCard.getType();
-
-                BigDecimal creditCardInterest = BigDecimal.valueOf(0);
-                switch (creditCardType) {
-                    case VISA:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .1).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case DISCOVER:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .01).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case MASTERCARD:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                }
+                BigDecimal creditCardInterest = getCreditCardInterest(creditCardBalance, creditCardType);
                 totalInterest =  totalInterest.add(creditCardInterest);
             }
         }
@@ -92,22 +75,9 @@ public class InterestService {
             BigDecimal walletInterest = BigDecimal.valueOf(0);
             ArrayList<CreditCard> creditCards = wallet.getCreditCards();
             for(CreditCard creditCard : creditCards) {
-
                 int creditCardBalance = creditCard.getBalance();
                 CreditCard.Type creditCardType = creditCard.getType();
-
-                BigDecimal creditCardInterest = BigDecimal.valueOf(0);
-                switch (creditCardType) {
-                    case VISA:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .1).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case DISCOVER:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .01).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case MASTERCARD:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                }
+                BigDecimal creditCardInterest = getCreditCardInterest(creditCardBalance, creditCardType);
                 walletInterest = walletInterest.add(creditCardInterest);
             }
             interestByWallet.put(wallet.getId(), walletInterest);
@@ -121,25 +91,28 @@ public class InterestService {
         for(Wallet wallet: wallets) {
             ArrayList<CreditCard> creditCards = wallet.getCreditCards();
             for(CreditCard creditCard : creditCards) {
-
                 int creditCardBalance = creditCard.getBalance();
                 CreditCard.Type creditCardType = creditCard.getType();
-
-                BigDecimal creditCardInterest = BigDecimal.valueOf(0);
-                switch (creditCardType) {
-                    case VISA:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .1).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case DISCOVER:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .01).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                    case MASTERCARD:
-                        creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
-                        break;
-                }
+                BigDecimal creditCardInterest = getCreditCardInterest(creditCardBalance, creditCardType);
                 interestByCreditCard.put(creditCard.getId(), creditCardInterest);
             }
         }
         return interestByCreditCard;
+    }
+
+    private BigDecimal getCreditCardInterest(int creditCardBalance, CreditCard.Type creditCardType) {
+        BigDecimal creditCardInterest = BigDecimal.valueOf(0);
+        switch (creditCardType) {
+            case VISA:
+                creditCardInterest = BigDecimal.valueOf(creditCardBalance * .1).setScale(2, RoundingMode.HALF_UP);
+                break;
+            case DISCOVER:
+                creditCardInterest = BigDecimal.valueOf(creditCardBalance * .01).setScale(2, RoundingMode.HALF_UP);
+                break;
+            case MASTERCARD:
+                creditCardInterest = BigDecimal.valueOf(creditCardBalance * .05).setScale(2, RoundingMode.HALF_UP);
+                break;
+        }
+        return creditCardInterest;
     }
 }

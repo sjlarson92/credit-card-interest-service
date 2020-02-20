@@ -87,8 +87,8 @@
 
 ## Examples with Insomnia
 
-<img src= "/SashaCodingProjects/credit-card-interest-service/images/testcase1.png" width= 60% length= 60%>
+<img src= "./images/testcase1.png" width= 60% length= 60%>
 
-<img src= "/images/testCase2.png" width= 60% length= 60%>
+<img src= "./images/testcase2.png" width= 60% length= 60%>
 
-<img src= "/images/testCase3.png" width= 60% length= 60%>
+<img src= "./images/testcase1.png" width= 60% length= 60%>

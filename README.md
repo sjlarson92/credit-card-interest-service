@@ -1,14 +1,17 @@
 # Credit Card Interest Service
 
-- Calculates credit card interest for a person. Returns total interest per person and wallet/credit card interest depending on api called
-
-## URL
+Can calculate: 
+   - total interest per person
+   - total interest per wallet
+   - interest by credit card
+    
+## Endpoints/APIs
 
 - /interest/customerAndCreditCard
 
 - /interest/customerAndWallet
 
-## Data Params
+## Required Request Body
 
 ```json
 [
@@ -44,9 +47,8 @@
 
 ## Success Response:
 
-- /customerAndCreditCard
-- Code: 200
-- Content:
+1. `/interest/customerAndCreditCard`
+
 ```json
 [
   {
@@ -65,9 +67,8 @@
 ]
 ```
 
-- /customerAndWallet
-- Code: 200
-- Content:
+2. `/interest/customerAndWallet`
+
 ```json
 [
   {
@@ -87,8 +88,8 @@
 
 ## Examples with Insomnia
 
-<img src= "./images/testcase1.png" width= 60% length= 60%>
+![test case 1](https://github.com/sjlarson92/credit-card-interest-service/blob/master/images/testCase1.png)
 
-<img src= "./images/testcase2.png" width= 60% length= 60%>
+![test case 2](https://github.com/sjlarson92/credit-card-interest-service/blob/master/images/testCase2.png)
 
-<img src= "./images/testcase1.png" width= 60% length= 60%>
+![test case 3](https://github.com/sjlarson92/credit-card-interest-service/blob/master/images/testCase3.png)
